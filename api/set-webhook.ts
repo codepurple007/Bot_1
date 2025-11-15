@@ -38,10 +38,15 @@ export default async function handler(req: any, res: any) {
     return;
   }
 
-  const bot = createBot({ BOT_TOKEN: token, ADMIN_IDS: adminIds, TARGET_GROUP_ID: groupId, TARGET_CHANNEL_ID: channelId, BOT_USERNAME: botUsername, CHANNEL_USERNAME: channelUsername });
-
   try {
     console.log("[SetWebhook] Creating bot instance...");
+    const bot = await createBot({ BOT_TOKEN: token, ADMIN_IDS: adminIds, TARGET_GROUP_ID: groupId, TARGET_CHANNEL_ID: channelId, BOT_USERNAME: botUsername, CHANNEL_USERNAME: channelUsername });
+    console.log("[SetWebhook] Bot instance created");
+    
+    // Initialize bot
+    await bot.init();
+    console.log("[SetWebhook] Bot initialized");
+    
     // Remove trailing slash from publicUrl if present
     const baseUrl = publicUrl.replace(/\/$/, '');
     const webhookUrl = `${baseUrl}/api/webhook`;

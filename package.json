@@ -1,0 +1,27 @@
+{
+  "name": "anon-telegram-bot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "20.x"
+  },
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "node scripts/ensure-public.js",
+    "start": "node dist/local.js",
+    "typecheck": "tsc -p . --noEmit"
+  },
+  "dependencies": {
+    "@vercel/kv": "^3.0.0",
+    "dotenv": "^16.4.5",
+    "grammy": "^1.21.1",
+    "undici": "^6.19.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3",
+    "vercel": "^39.1.2"
+  }
+}

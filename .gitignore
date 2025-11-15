@@ -1,0 +1,34 @@
+# Node
+node_modules/
+.npm/
+
+# Builds
+/dist/
+
+# Public directory (should be committed but ignore contents except index.html)
+/public/*
+!/public/.gitkeep
+!/public/index.html
+
+# Env files (keep env.example tracked)
+.env
+.env.*
+!.env.example
+
+# Vercel local state
+.vercel/
+
+# OS/editor junk
+.DS_Store
+Thumbs.db
+*.log
+
+# Debug/test files
+debug-token.js
+fix-env.js
+test-token.js
+add-discussion-username.js
+update-discussion-id.js
+
+
+

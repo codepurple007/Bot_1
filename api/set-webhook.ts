@@ -16,7 +16,19 @@ export default async function handler(req: any, res: any) {
     .map((s) => s.trim())
     .filter(Boolean)
     .map((s) => Number(s));
-  const publicUrl = process.env.PUBLIC_URL; // e.g., https://your-project.vercel.app
+  
+  // Auto-detect production URL from request if PUBLIC_URL is not set or is a git deployment URL
+  let publicUrl = process.env.PUBLIC_URL;
+  if (!publicUrl || publicUrl.includes('git-') || publicUrl.includes('.git.')) {
+    // Extract production URL from request headers
+    const host = req.headers['x-forwarded-host'] || req.headers.host;
+    const protocol = req.headers['x-forwarded-proto'] || 'https';
+    if (host && !host.includes('git-') && !host.includes('.git.')) {
+      publicUrl = `${protocol}://${host}`;
+      console.log("[SetWebhook] Auto-detected production URL from request:", publicUrl);
+    }
+  }
+  
   const groupId = process.env.TARGET_GROUP_ID ? Number(process.env.TARGET_GROUP_ID) : undefined;
   const channelId = process.env.TARGET_CHANNEL_ID ? Number(process.env.TARGET_CHANNEL_ID) : undefined;
   const botUsername = process.env.BOT_USERNAME || undefined;
@@ -25,7 +37,9 @@ export default async function handler(req: any, res: any) {
   console.log("[SetWebhook] Environment check:", {
     hasToken: !!token,
     adminIdsCount: adminIds.length,
-    publicUrl: publicUrl
+    publicUrl: publicUrl,
+    requestHost: req.headers.host,
+    forwardedHost: req.headers['x-forwarded-host']
   });
 
   if (!token || adminIds.length === 0 || !publicUrl) {

@@ -22,7 +22,9 @@ export default async function handler(req: any, res: any) {
   if (!publicUrl || publicUrl.includes('git-') || publicUrl.includes('.git.')) {
     // Extract production URL from request headers
     const host = req.headers['x-forwarded-host'] || req.headers.host;
-    const protocol = req.headers['x-forwarded-proto'] || 'https';
+    // Default to http for localhost, https for production
+    const isLocalhost = host && (host.includes('localhost') || host.includes('127.0.0.1'));
+    const protocol = req.headers['x-forwarded-proto'] || (isLocalhost ? 'http' : 'https');
     if (host && !host.includes('git-') && !host.includes('.git.')) {
       publicUrl = `${protocol}://${host}`;
       console.log("[SetWebhook] Auto-detected production URL from request:", publicUrl);
